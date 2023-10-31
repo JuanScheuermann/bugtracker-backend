@@ -24,12 +24,31 @@ public class UserServicio : IUserServicio
         {
             Email = userDto.Email,
             PasswordHash = contrasenaHash,
+            Nombre = userDto.Nombre,
+            Apellido = userDto.Apellido,
             Rol = userDto.Rol
         };
 
         _context.users.Add(usuario);
         await _context.SaveChangesAsync();
 
+    }
+
+    public async Task Editar(UserDto userDto)
+    {
+        string contrasenaHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+        var user = new Models.User
+        {
+            Id = userDto.Id,
+            Email = userDto.Email,
+            PasswordHash = contrasenaHash,
+            Nombre = userDto.Nombre,
+            Apellido = userDto.Apellido,
+            Rol = userDto.Rol
+        };
+
+        _context.users.Update(user);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<UserDto> ObtenerPorMail(string email = "")
@@ -46,9 +65,36 @@ public class UserServicio : IUserServicio
             Nombre = usuario.Nombre,
             Apellido = usuario.Apellido,
             Password = usuario.PasswordHash,
-            Rol = usuario.Rol
+            Rol = usuario.Rol,
         };
     }
 
+    public async Task<UserDto> ObtenerPorId(long id)
+    {
+        var user = await _context.users.AsNoTracking()
+        .FirstOrDefaultAsync(x => x.Id == id);
 
+        return new UserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Nombre = user.Nombre,
+            Rol = user.Rol
+        };
+    }
+
+    public async Task<List<UserDto>> ObtenerUsuarios(string cadenaBuscar = "")
+    {
+        return await _context.users.
+        Where(x => x.Email.Contains(cadenaBuscar)).
+        Select(x => new UserDto
+        {
+            Id = x.Id,
+            Email = x.Email,
+            Nombre = x.Nombre,
+            Apellido = x.Apellido,
+            Rol = x.Rol,
+            Estado = x.Estado
+        }).ToListAsync();
+    }
 }

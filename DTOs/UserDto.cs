@@ -15,4 +15,6 @@ public class UserDto
     public string Password { get; set; }
 
     public string Rol { get; set; }
+
+    public string? Estado { get; set; }
 }

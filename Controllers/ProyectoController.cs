@@ -37,4 +37,39 @@ public class ProyectoController : ControllerBase
             message = "Proyecto creado correctamenete"
         });
     }
+
+    [HttpPut]
+    [Route("proyecto_edit")]
+    public async Task<ActionResult> EditarProyecto([FromBody] ProyectoDto dto)
+    {
+        var proyecto = await _proyectoServicio.Obtener(dto.Id);
+
+        if (proyecto == null)
+            return BadRequest(new { message = "No se pudo encontrar el proyecto" });
+
+        await _proyectoServicio.Modificarproyecto(dto);
+
+        return Ok(new
+        {
+            message = "los cambios se realizaron correctamente"
+        });
+
+    }
+
+    [HttpDelete]
+    [Route("proyecto_delete")]
+    public async Task<ActionResult> EliminarProyecto(long id)
+    {
+        var proyecto = await _proyectoServicio.Obtener(id);
+        if (proyecto == null) return BadRequest(new
+        {
+            message = "El proyecto no existe"
+        });
+
+        await _proyectoServicio.EliminarProyecto(proyecto.Id);
+        return Ok(new
+        {
+            message = "los cambios se realizaron correctamente"
+        });
+    }
 }

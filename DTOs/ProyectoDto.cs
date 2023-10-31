@@ -12,6 +12,6 @@ public class ProyectoDto
 
     public EstadoDesarrollo EstadoDesarrollo { get; set; }
 
-    public List<MiembroDto> Miembros { get; set; }
+    public List<MiembroDto>? Miembros { get; set; }
 
 }

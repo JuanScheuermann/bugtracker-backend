@@ -47,9 +47,13 @@ public class ProyectoServicio : IProyectoServicio
         }
     }
 
-    public Task EliminarProyecto(long id)
+    public async Task EliminarProyecto(long id)
     {
-        throw new NotImplementedException();
+        var proyecto = await _context.Proyectos.FindAsync(id);
+        proyecto.Estado = "Eliminado";
+
+        _context.Proyectos.Update(proyecto);
+        await _context.SaveChangesAsync();
     }
 
     public async Task Modificarproyecto(ProyectoDto proyectoDto)
@@ -60,6 +64,7 @@ public class ProyectoServicio : IProyectoServicio
             Id = proyectoDto.Id,
             Titulo = proyectoDto.Titulo,
             Descripcion = proyectoDto.Descripcion,
+            AutorId = proyectoDto.AutorId,
             EstadoDesarrollo = proyectoDto.EstadoDesarrollo
         };
 
@@ -77,6 +82,7 @@ public class ProyectoServicio : IProyectoServicio
             Id = x.Id,
             Titulo = x.Titulo,
             Descripcion = x.Descripcion,
+            AutorId = x.AutorId,
             EstadoDesarrollo = x.EstadoDesarrollo,
             Miembros = x.Miembros.Select(m => new MiembroDto
             {
@@ -88,8 +94,27 @@ public class ProyectoServicio : IProyectoServicio
         }).ToListAsync();
     }
 
-    public Task<ProyectoDto> Obtener(long id)
+    public async Task<ProyectoDto> Obtener(long id)
     {
-        throw new NotImplementedException();
+        var proyecto = await _context.Proyectos
+        .Include(x => x.Miembros).AsNoTracking()
+        .FirstOrDefaultAsync(x => x.Id == id);
+
+        return new ProyectoDto
+        {
+            Id = proyecto.Id,
+            Titulo = proyecto.Titulo,
+            Descripcion = proyecto.Descripcion,
+            AutorId = proyecto.AutorId,
+            EstadoDesarrollo = proyecto.EstadoDesarrollo,
+            Miembros = proyecto.Miembros
+            .Select(m => new MiembroDto
+            {
+                Id = m.Id,
+                ProyectoId = m.ProyectoId,
+                UsuarioId = m.UserId
+
+            }).ToList()
+        };
     }
 }
