@@ -1,10 +1,11 @@
+using System.Text;
 using backend.Config;
 using backend.Data;
 using backend.Middlewares;
-using backend.Services.IServicio;
-using backend.Services.Servicio;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +17,23 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext"));
 });
-builder.Services.
-AutenticacionJwt(builder.Configuration).
-AgregarServicios();
+
+builder.Services.AddAuthentication("Bearer").AddJwtBearer(opt =>
+{
+    var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!));
+    var siginCredentials = new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256Signature);
+
+    opt.RequireHttpsMetadata = false;
+
+    opt.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        IssuerSigningKey = signinKey
+    };
+
+});
+builder.Services.AgregarServicios();
 
 builder.Services.AddCors(builder =>
 {
@@ -32,13 +47,24 @@ builder.Services.AddCors(builder =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+});
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-app.UseCors("allowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -46,6 +72,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("allowAll");
 
 app.UseHttpsRedirection();
 

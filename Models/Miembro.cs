@@ -14,4 +14,8 @@ public class Miembro : Base
     public virtual Proyecto Proyecto { get; set; }
 
     public virtual User Usuarior { get; set; }
+
+    public virtual ICollection<Etiqueta> Etiquetas { get; set; }
+
+    public virtual ICollection<Comentario> Comentarios { get; set; }
 }

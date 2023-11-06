@@ -4,14 +4,18 @@ namespace backend.Services.IServicio;
 
 public interface IProyectoServicio
 {
-    Task CrearProyecto(ProyectoDto proyectoDto);
+    Task<long> CrearProyecto(ProyectoDto proyectoDto);
 
-    Task Modificarproyecto(ProyectoDto proyectoDto);
+    Task Modificarproyecto(ProyectoEditarDto proyectoDto);
 
     Task EliminarProyecto(long id);
 
-    Task<List<ProyectoDto>> ObtenerMisProyectos(long id);
+    Task<bool> TieneAccesoProyecto(long pId, long userId);
 
-    Task<ProyectoDto> Obtener(long id);
+    Task<List<ProyectoInfoDto>> ObtenerMisProyectos(long id);
+
+    Task<ProyectoDto?> Obtener(long id);
+
+    Task<List<ProyectoInfoDto>> ObtenerProyectosContribucion(long uid);
 
 }

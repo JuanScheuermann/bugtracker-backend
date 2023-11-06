@@ -76,3 +76,6 @@ D:\proyecto-final\backend\bin\Debug\net7.0\Mono.TextTemplating.dll
 D:\proyecto-final\backend\bin\Debug\net7.0\System.CodeDom.dll
 D:\proyecto-final\backend\bin\Debug\net7.0\BCrypt.Net-Next.dll
 D:\proyecto-final\backend\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\proyecto-final\backend\bin\Debug\net7.0\Scrutor.dll
+D:\proyecto-final\backend\bin\Debug\net7.0\Swashbuckle.AspNetCore.Filters.dll
+D:\proyecto-final\backend\bin\Debug\net7.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll

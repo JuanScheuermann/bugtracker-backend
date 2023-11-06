@@ -7,7 +7,7 @@ namespace backend.Config;
 
 public static class DependenciasConfig
 {
-    public static IServiceCollection AutenticacionJwt(this IServiceCollection services, IConfiguration configuration)
+    /* public static IServiceCollection AutenticacionJwt(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthentication().AddJwtBearer(option =>
         {
@@ -24,11 +24,14 @@ public static class DependenciasConfig
         });
 
         return services;
-    }
+    } */
     public static IServiceCollection AgregarServicios(this IServiceCollection services)
     {
         services.AddScoped<IUserServicio, UserServicio>();
         services.AddScoped<IProyectoServicio, ProyectoServicio>();
+        services.AddScoped<IEtiquetaServicio, EtiquetaServicio>();
+        services.AddScoped<IMiembroServicio, MiembroServicio>();
+        services.AddScoped<IComentarioServicio, ComentarioServicio>();
         return services;
     }
 }

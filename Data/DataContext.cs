@@ -32,4 +32,8 @@ public class DataContext : DbContext
 
     public DbSet<Miembro> Miembros { get; set; }
 
+    public DbSet<Etiqueta> Etiquetas { get; set; }
+
+    public DbSet<Comentario> Comentarios { get; set; }
+
 }

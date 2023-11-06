@@ -10,24 +10,37 @@ public static class JwtHelper
 {
     public static string GenerarJwt(UserDto user, IConfiguration configuration)
     {
-        List<Claim> claims = new List<Claim>()
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var byteKey = Encoding.UTF8
+        .GetBytes(configuration.GetSection("AppSettings:Token").Value!);
+
+
+        var TokenDes = new SecurityTokenDescriptor
         {
-            new Claim(ClaimTypes.Sid, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Email),
-            new Claim(ClaimTypes.Role, user.Rol)
+            Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.Role, user.Rol),
+                    new Claim(ClaimTypes.Sid, user.Id.ToString())
+
+                }),
+            SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(byteKey),
+                    SecurityAlgorithms.HmacSha256Signature
+                )
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value!));
+        var token = tokenHandler.CreateToken(TokenDes);
 
-        var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        return tokenHandler.WriteToken(token);
 
-        var token = new JwtSecurityToken(
-            claims: claims,
-            signingCredentials: cred
-        );
-
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return jwt;
     }
+
+    /* public static IEnumerable<Claim> ObtenerClaims(string jwtToken)
+    {
+        JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+        JwtSecurityToken securityToken = (JwtSecurityToken)tokenHandler.ReadToken(jwtToken);
+        IEnumerable<Claim> claims = securityToken.Claims;
+        return claims;
+    } */
 }

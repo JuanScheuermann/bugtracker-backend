@@ -24,4 +24,6 @@ public class Proyecto : Base
     //props navegacion
     public virtual ICollection<Miembro> Miembros { get; set; }
     public virtual User User { get; set; }
+
+    public virtual ICollection<Etiqueta> Etiquetas { get; set; }
 }

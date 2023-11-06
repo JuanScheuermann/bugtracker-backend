@@ -10,5 +10,5 @@ public class Base
     public long Id { get; set; }
 
     [Required]
-    public string Estado { get; set; } = "Activo"; //Valor por defecto
+    public string Estado { get; set; } = Models.Estado.Activo; //Valor por defecto
 }

@@ -5,6 +5,7 @@ using backend.Services.IServicio;
 using BCrypt.Net;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace backend.Services.Servicio;
 
@@ -20,13 +21,18 @@ public class UserServicio : IUserServicio
     public async Task Crear(UserDto userDto)
     {
         string contrasenaHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+
+        if (userDto.FotoUrl == null) { userDto.FotoUrl = "www.foto.com"; }
+
         User usuario = new User
         {
             Email = userDto.Email,
             PasswordHash = contrasenaHash,
             Nombre = userDto.Nombre,
             Apellido = userDto.Apellido,
-            Rol = userDto.Rol
+            Rol = userDto.Rol,
+            FotoUrl = userDto.FotoUrl,
+            Estado = Models.Estado.Activo
         };
 
         _context.users.Add(usuario);
@@ -44,7 +50,9 @@ public class UserServicio : IUserServicio
             PasswordHash = contrasenaHash,
             Nombre = userDto.Nombre,
             Apellido = userDto.Apellido,
-            Rol = userDto.Rol
+            Rol = userDto.Rol,
+            FotoUrl = userDto.FotoUrl,
+            Estado = userDto.Estado
         };
 
         _context.users.Update(user);
@@ -66,6 +74,8 @@ public class UserServicio : IUserServicio
             Apellido = usuario.Apellido,
             Password = usuario.PasswordHash,
             Rol = usuario.Rol,
+            FotoUrl = usuario.FotoUrl,
+            Estado = usuario.Estado
         };
     }
 
@@ -79,7 +89,10 @@ public class UserServicio : IUserServicio
             Id = user.Id,
             Email = user.Email,
             Nombre = user.Nombre,
-            Rol = user.Rol
+            Apellido = user.Apellido,
+            Rol = user.Rol,
+            FotoUrl = user.FotoUrl,
+            Estado = user.Estado
         };
     }
 
