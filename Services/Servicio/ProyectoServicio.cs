@@ -68,7 +68,7 @@ public class ProyectoServicio : IProyectoServicio
         await _context.SaveChangesAsync();
     }
 
-    public async Task Modificarproyecto(ProyectoEditarDto proyectoDto)
+    public async Task<ProyectoDto> Modificarproyecto(ProyectoEditarDto proyectoDto)
     {
 
         var proyecto = new Models.Proyecto
@@ -82,13 +82,22 @@ public class ProyectoServicio : IProyectoServicio
 
         _context.Proyectos.Update(proyecto);
         await _context.SaveChangesAsync();
+
+        return new ProyectoDto
+        {
+            Id = proyecto.Id,
+            Titulo = proyecto.Titulo,
+            Descripcion = proyecto.Descripcion,
+            AutorId = proyecto.AutorId,
+            EstadoDesarrollo = proyecto.EstadoDesarrollo
+        };
     }
 
     public async Task<List<ProyectoInfoDto>> ObtenerMisProyectos(long id)
     {
         return await _context.Proyectos
         .Include(x => x.Miembros)
-        .Where(p => p.AutorId == id)
+        .Where(p => p.AutorId == id && p.Estado != Estado.Eliminado)
         .Select(x => new ProyectoInfoDto
         {
             Id = x.Id,
@@ -165,7 +174,7 @@ public class ProyectoServicio : IProyectoServicio
 
         return await _context.Proyectos
         .Include(x => x.User)
-        .Where(x => miembros.Contains(x.Id))
+        .Where(x => miembros.Contains(x.Id) && x.Estado == Estado.Activo)
         .Select(x => new ProyectoInfoDto
         {
             Id = x.Id,

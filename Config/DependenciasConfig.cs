@@ -32,6 +32,7 @@ public static class DependenciasConfig
         services.AddScoped<IEtiquetaServicio, EtiquetaServicio>();
         services.AddScoped<IMiembroServicio, MiembroServicio>();
         services.AddScoped<IComentarioServicio, ComentarioServicio>();
+        services.AddScoped<IContrasenaServicio, ContrasenaServicio>();
         return services;
     }
 }

@@ -22,24 +22,23 @@ public class MiembroController : ControllerBase
 
     [HttpPost]
     [Route("{pid}/miembro_add")]
-    public async Task<ActionResult> AgregarMiembro(long pid, [FromBody] MiembroAgregarDto miembroDto)
+    public async Task<ActionResult> AgregarMiembro(long pid, [FromBody] List<MiembroAgregarDto> miembrosDto)
     {
 
         var proyectoActual = await _proyectoServicio.Obtener(pid);
 
         if (proyectoActual == null) return NotFound();
 
-        foreach (var miembro in proyectoActual.Miembros!)
+        /* foreach (var miembro in miembrosDto)
         {
-            if (miembro.UsuarioId == miembroDto.UsuarioId)
-                return BadRequest(new { message = "Este usuario ya es un miembro del proyecto" });
-        }
+            miembro.ProyectoId = pid;
+        } */
 
-        //await _miembroServicio.AgregarMiembro(miembroDto);
+        await _miembroServicio.AgregarMiembros(miembrosDto);
 
         return Ok(new
         {
-            message = $"Nuevo miembro agregado"
+            message = $"Nuevo/s miembro/s agregado/s"
         });
     }
 

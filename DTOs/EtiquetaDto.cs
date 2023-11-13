@@ -14,6 +14,10 @@ public class EtiquetaDto
 
     public Prioridad Prioridad { get; set; }
 
+    public string? AutorStr { get; set; }
+
+    public string? Fecha { get; set; }
+
     public long ProyectoId { get; set; }
 
     public long MiembroId { get; set; }

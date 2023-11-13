@@ -32,7 +32,7 @@ public class ComentarioController : ControllerBase
         var comentario = await _comentarioServicio
         .AgregarComentario(comentarioDto);
 
-        return Ok(comentarioDto);
+        return Ok(comentario);
     }
 
     [HttpGet]

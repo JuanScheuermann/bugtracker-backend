@@ -21,10 +21,11 @@ public class ProyectoController : ControllerBase
     }
 
     [HttpGet]
-    [Route("all")]
-    public async Task<ActionResult> Obtenerproyectos()
+    [Route("{uid}/all")]
+    [AllowAnonymous]
+    public async Task<ActionResult> Obtenerproyectos(long uid)
     {
-        var proyectos = await _proyectoServicio.ObtenerMisProyectos(ObtenerUserId());
+        var proyectos = await _proyectoServicio.ObtenerMisProyectos(uid);
         return Ok(proyectos);
     }
 
@@ -38,12 +39,12 @@ public class ProyectoController : ControllerBase
         return Ok(new
         {
             message = "Proyecto creado correctamenete",
-            pId = pId
+            pId
         });
     }
 
     [HttpPut]
-    [Route("proyecto_edit/{pid}")]
+    [Route("{pid}/editar")]
     public async Task<ActionResult> EditarProyecto(long pid, [FromBody] ProyectoEditarDto dto)
     {
         var proyecto = await _proyectoServicio.Obtener(pid);
@@ -57,12 +58,9 @@ public class ProyectoController : ControllerBase
         dto.Id = proyecto.Id;
         dto.AutorId = proyecto.AutorId;
 
-        await _proyectoServicio.Modificarproyecto(dto);
+        var proyectoEdit = await _proyectoServicio.Modificarproyecto(dto);
 
-        return Ok(new
-        {
-            message = "los cambios se realizaron correctamente"
-        });
+        return Ok(proyectoEdit);
 
     }
 
@@ -99,11 +97,11 @@ public class ProyectoController : ControllerBase
     }
 
     [HttpGet]
-    [Route("participando")]
-    public async Task<ActionResult> ObtenerProyectosParticipo()
+    [Route("{uid}/participando")]
+    public async Task<ActionResult> ObtenerProyectosParticipo(long uid)
     {
 
-        var proyectos = await _proyectoServicio.ObtenerProyectosContribucion(ObtenerUserId());
+        var proyectos = await _proyectoServicio.ObtenerProyectosContribucion(uid);
         return Ok(proyectos);
     }
 

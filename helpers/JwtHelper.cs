@@ -19,7 +19,6 @@ public static class JwtHelper
         {
             Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Email),
                     new Claim(ClaimTypes.Role, user.Rol),
                     new Claim(ClaimTypes.Sid, user.Id.ToString())
 

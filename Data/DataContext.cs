@@ -14,17 +14,9 @@ con la syntaxis de C# sin necesidad de escribir consultas SQL*/
 public class DataContext : DbContext
 {
     public DataContext(DbContextOptions<DataContext> options)
-    : base(options) { }
-
-    //Las propiedades de tipo DbSet son set de datos
-    //que provienen de mi BD 
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    : base(options)
     {
-        /* modelBuilder.Entity<User>()
-        .HasMany((u) => u.Miembros)
-        .WithOne((m) => m.User)
-        .OnDelete(DeleteBehavior.Restrict); */
+
     }
     public DbSet<User> users { get; set; }
 
@@ -35,5 +27,7 @@ public class DataContext : DbContext
     public DbSet<Etiqueta> Etiquetas { get; set; }
 
     public DbSet<Comentario> Comentarios { get; set; }
+
+    public DbSet<ReiniciarContrasena> reiniciarContrasenas { get; set; }
 
 }

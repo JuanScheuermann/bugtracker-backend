@@ -4,7 +4,7 @@ namespace backend.Services.IServicio;
 
 public interface IUserServicio
 {
-    Task Crear(UserDto userDto);
+    Task Crear(UserDto userDto, string token);
 
     Task Editar(UserDto userDto);
 

@@ -4,7 +4,7 @@ namespace backend.Services.IServicio;
 
 public interface IMiembroServicio
 {
-    Task AgregarMiembro(MiembroAgregarDto miembroDto);
+    Task AgregarMiembros(List<MiembroAgregarDto> miembrosDto);
 
     Task EliminarMiembro(long id);
 

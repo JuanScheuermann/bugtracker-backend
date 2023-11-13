@@ -79,7 +79,7 @@ public class EtiquetaController : ControllerBase
 
     [HttpPut]
     [Route("etiqueta_mod/{id}")]
-    public async Task<ActionResult> ModificarEtiqueta(long id, [FromBody] EtiquetaDto etiquetaDto)
+    public async Task<ActionResult> ModificarEtiqueta(long id, [FromBody] ModificarEtiquetaDto etiquetaDto)
     {
         var etiqueta = await _etiquetaServicio.ObtenerEtiqueta(id);
 
@@ -88,7 +88,13 @@ public class EtiquetaController : ControllerBase
             message = "etiqueta inexistente"
         });
 
-        await _etiquetaServicio.ModificarEtiqueta(etiquetaDto);
+        etiqueta.Titulo = etiquetaDto.Titulo;
+        etiqueta.Detalles = etiquetaDto.Detalles;
+        etiqueta.Prioridad = etiquetaDto.Prioridad;
+
+        //etiqueta.EstadoApertura = etiquetaDto.EstadoApertura;
+
+        await _etiquetaServicio.ModificarEtiqueta(etiqueta);
 
         return Ok(new
         {
@@ -96,11 +102,26 @@ public class EtiquetaController : ControllerBase
         });
     }
 
-    [HttpDelete]
-    [Route("etiqueta_del/{id}")]
+    [HttpPut]
+    [Route("etiqueta_cerrar/{id}")]
     public async Task<ActionResult> CerrarEtiqueta(long id)
     {
-        await _etiquetaServicio.EliminarEtiqueta(id);
+        var etiqueta = await _etiquetaServicio.ObtenerEtiqueta(id);
+        if (etiqueta == null) return NotFound("No se logro encontrar la etiqueta");
+
+        etiqueta.EstadoApertura = Models.enums.EstadoApertura.Cerrado;
+        await _etiquetaServicio.ModificarEtiqueta(etiqueta);
+        return Ok();
+    }
+
+    [HttpDelete]
+    [Route("etiqueta_eliminar/{id}")]
+    public async Task<ActionResult> Eliminartiqueta(long id)
+    {
+        var etiqueta = await _etiquetaServicio.ObtenerEtiqueta(id);
+        if (etiqueta == null) return NotFound("No se logro encontrar la etiqueta");
+
+        await _etiquetaServicio.EliminarEtiqueta(etiqueta);
         return Ok();
     }
 

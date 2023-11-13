@@ -16,16 +16,19 @@ public class MiembroServicio : IMiembroServicio
         _context = context;
     }
 
-    public async Task AgregarMiembro(MiembroAgregarDto miembroDto)
+    public async Task AgregarMiembros(List<MiembroAgregarDto> miembrosDto)
     {
-        var miembro = new Models.Miembro
+        foreach (var miembroDto in miembrosDto)
         {
-            UserId = miembroDto.UsuarioId,
-            ProyectoId = miembroDto.ProyectoId,
-            Estado = Models.Estado.Activo
-        };
+            var miembro = new Models.Miembro
+            {
+                UserId = miembroDto.UsuarioId,
+                ProyectoId = miembroDto.ProyectoId,
+                Estado = Models.Estado.Activo
+            };
 
-        _context.Miembros.Add(miembro);
+            _context.Miembros.Add(miembro);
+        }
 
         await _context.SaveChangesAsync();
     }
@@ -58,6 +61,7 @@ public class MiembroServicio : IMiembroServicio
             Id = x.Id,
             ProyectoId = x.ProyectoId,
             UsuarioId = x.UserId,
+            Email = x.Usuarior.Email,
             ApiNom = $"{x.Usuarior.Nombre} {x.Usuarior.Apellido}",
             Estado = x.Estado
 
@@ -78,6 +82,7 @@ public class MiembroServicio : IMiembroServicio
             ProyectoId = miembro.ProyectoId,
             UsuarioId = miembro.UserId,
             ApiNom = $"{miembro.Usuarior.Nombre}  {miembro.Usuarior.Apellido}",
+            Email = miembro.Usuarior.Email,
             Estado = miembro.Estado
         };
     }

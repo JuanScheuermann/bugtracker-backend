@@ -8,7 +8,7 @@ public interface IEtiquetaServicio
 
     Task ModificarEtiqueta(EtiquetaDto etiquetaDto);
 
-    Task EliminarEtiqueta(long id);
+    Task EliminarEtiqueta(EtiquetaDto etiqueta);
 
     Task<List<EtiquetaDto>> ObtenerEtiquetas(long proyectoId, string cadenaBuscar);
 

@@ -79,3 +79,8 @@ D:\proyecto-final\backend\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.J
 D:\proyecto-final\backend\bin\Debug\net7.0\Scrutor.dll
 D:\proyecto-final\backend\bin\Debug\net7.0\Swashbuckle.AspNetCore.Filters.dll
 D:\proyecto-final\backend\bin\Debug\net7.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+D:\proyecto-final\backend\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
+D:\proyecto-final\backend\bin\Debug\net7.0\MailKit.dll
+D:\proyecto-final\backend\bin\Debug\net7.0\MimeKit.dll
+D:\proyecto-final\backend\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
+D:\proyecto-final\backend\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll

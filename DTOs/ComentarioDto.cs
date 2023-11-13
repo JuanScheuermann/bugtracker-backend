@@ -10,9 +10,9 @@ public class ComentarioDto
 
     public long MiembroId { get; set; }
 
-    public string MiembroStr { get; set; }
+    public string? MiembroStr { get; set; }
 
     public long EtiquetaId { get; set; }
 
-    public string Estado { get; set; }
+    public string? Estado { get; set; }
 }

@@ -24,18 +24,28 @@ public class EtiquetaServicio : IEtiquetaServicio
             EstadoApertura = EstadoApertura.Abierto,
             Prioridad = etiquetaDto.Prioridad,
             ProyectoId = etiquetaDto.ProyectoId,
-            MiembroId = etiquetaDto.MiembroId
+            MiembroId = etiquetaDto.MiembroId,
+            Fecha = DateTime.UtcNow.Date.ToString("d")
         };
 
         _context.Etiquetas.Add(etiqueta);
         await _context.SaveChangesAsync();
     }
 
-    public async Task EliminarEtiqueta(long id)
-    {
-        var etiqueta = await _context.Etiquetas.FindAsync(id);
 
-        if (etiqueta == null) throw new Exception("etiqueta no exiate");
+    public async Task EliminarEtiqueta(EtiquetaDto etiquetaDto)
+    {
+        var etiqueta = new Models.Etiqueta
+        {
+            Id = etiquetaDto.Id,
+            Titulo = etiquetaDto.Titulo,
+            Detalles = etiquetaDto.Detalles,
+            EstadoApertura = etiquetaDto.EstadoApertura,
+            Prioridad = etiquetaDto.Prioridad,
+            MiembroId = etiquetaDto.MiembroId,
+            ProyectoId = etiquetaDto.ProyectoId,
+            Fecha = etiquetaDto.Fecha
+        };
 
         etiqueta.Estado = Models.Estado.Eliminado;
 
@@ -53,7 +63,8 @@ public class EtiquetaServicio : IEtiquetaServicio
             EstadoApertura = etiquetaDto.EstadoApertura,
             Prioridad = etiquetaDto.Prioridad,
             MiembroId = etiquetaDto.MiembroId,
-            ProyectoId = etiquetaDto.ProyectoId
+            ProyectoId = etiquetaDto.ProyectoId,
+            Fecha = etiquetaDto.Fecha
         };
 
         _context.Etiquetas.Update(etiqueta);
@@ -78,7 +89,8 @@ public class EtiquetaServicio : IEtiquetaServicio
             EstadoApertura = etiqueta.EstadoApertura,
             Prioridad = etiqueta.Prioridad,
             ProyectoId = etiqueta.ProyectoId,
-            MiembroId = etiqueta.MiembroId
+            MiembroId = etiqueta.MiembroId,
+            Fecha = etiqueta.Fecha
         };
     }
 

@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 public class UsuarioController : ControllerBase
 {
     private readonly IUserServicio _userServicio;
+    private readonly IMiembroServicio _miembroServicio;
 
-    public UsuarioController(IUserServicio userServicio)
+    public UsuarioController(IUserServicio userServicio, IMiembroServicio miembroServicio)
     {
         _userServicio = userServicio;
+        _miembroServicio = miembroServicio;
     }
 
     [HttpPut]
     [Route("mod_usuario")]
-    public async Task<IActionResult> ModificarPerfil([FromBody] UserDto userDto)
+    public async Task<ActionResult> ModificarPerfil([FromBody] UserDto userDto)
     {
 
         var usuario = await _userServicio.ObtenerPorId(userDto.Id);
@@ -34,13 +36,38 @@ public class UsuarioController : ControllerBase
 
     [HttpGet]
     [Route("all")]
-    public async Task<IActionResult> ObtnerUsuarios(string cadenaBuscar = "")
+    public async Task<ActionResult> ObtnerUsuarios(string cadenaBuscar = "")
     {
         var usuarios = await _userServicio.ObtenerUsuarios(cadenaBuscar);
 
-        return Ok(new
+        return Ok(usuarios);
+    }
+
+    [HttpGet]
+    [Route("{uid}")]
+    public async Task<ActionResult> ObtenerUsuario(long uid)
+    {
+        var usuario = await _userServicio.ObtenerPorId(uid);
+        if (usuario == null) return NotFound();
+
+        return Ok(usuario);
+    }
+
+    [HttpGet]
+    [Route("{pid}")]
+    public async Task<ActionResult> ObtenerNoMiembros(long pid)
+    {
+        var miembros = await _miembroServicio.ObtenerMiembros(pid);
+        var usuarios = await _userServicio.ObtenerUsuarios("");
+
+        var usuariosList = new List<UserDto>();
+        foreach (var usuario in usuarios)
         {
-            usuarios
-        });
+            if (miembros.Any(x => x.UsuarioId == usuario.Id) == false)
+            {
+                usuariosList.Add(usuario);
+            }
+        }
+        return Ok(usuariosList);
     }
 }

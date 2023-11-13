@@ -8,17 +8,20 @@ public class Etiqueta : Base
 {
     [Required]
     [MaxLength(70)]
-    public string Titulo { get; set; }
+    public string? Titulo { get; set; }
 
     [Required]
-    [MaxLength(150)]
-    public string Detalles { get; set; }
+    [MaxLength(250)]
+    public string? Detalles { get; set; }
 
     [Required]
     public EstadoApertura EstadoApertura { get; set; }
 
     [Required]
     public Prioridad Prioridad { get; set; }
+
+    [Required]
+    public string? Fecha { get; set; }
 
     [ForeignKey("Proyecto")]
     public long ProyectoId { get; set; }

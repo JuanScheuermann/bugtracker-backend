@@ -18,7 +18,7 @@ public class UserServicio : IUserServicio
         _context = context;
     }
 
-    public async Task Crear(UserDto userDto)
+    public async Task Crear(UserDto userDto, string token)
     {
         string contrasenaHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
 
@@ -35,7 +35,15 @@ public class UserServicio : IUserServicio
             Estado = Models.Estado.Activo
         };
 
+        var userToken = new ReiniciarContrasena
+        {
+            Email = userDto.Email,
+            Token = token
+        };
+
         _context.users.Add(usuario);
+        _context.reiniciarContrasenas.Add(userToken);
+
         await _context.SaveChangesAsync();
 
     }

@@ -6,7 +6,7 @@ public interface IProyectoServicio
 {
     Task<long> CrearProyecto(ProyectoDto proyectoDto);
 
-    Task Modificarproyecto(ProyectoEditarDto proyectoDto);
+    Task<ProyectoDto> Modificarproyecto(ProyectoEditarDto proyectoDto);
 
     Task EliminarProyecto(long id);
 

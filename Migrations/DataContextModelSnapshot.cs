@@ -67,8 +67,8 @@ namespace backend.Migrations
 
                     b.Property<string>("Detalles")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Estado")
                         .IsRequired()
@@ -76,6 +76,10 @@ namespace backend.Migrations
 
                     b.Property<int>("EstadoApertura")
                         .HasColumnType("int");
+
+                    b.Property<string>("Fecha")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("MiembroId")
                         .HasColumnType("bigint");
@@ -159,6 +163,28 @@ namespace backend.Migrations
                     b.HasIndex("AutorId");
 
                     b.ToTable("Proyectos");
+                });
+
+            modelBuilder.Entity("backend.Models.ReiniciarContrasena", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("reiniciarContrasenas");
                 });
 
             modelBuilder.Entity("backend.Models.User", b =>
