@@ -1,16 +1,29 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class EntidadComentario : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "reiniciarContrasenas",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_reiniciarContrasenas", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Usuarios",
                 columns: table => new
@@ -87,9 +100,10 @@ namespace backend.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Titulo = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
-                    Detalles = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Detalles = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     EstadoApertura = table.Column<int>(type: "int", nullable: false),
                     Prioridad = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProyectoId = table.Column<long>(type: "bigint", nullable: false),
                     MiembroId = table.Column<long>(type: "bigint", nullable: false),
                     Estado = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -118,7 +132,7 @@ namespace backend.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Cuerpo = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fecha = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MiembroId = table.Column<long>(type: "bigint", nullable: false),
                     EtiquetaId = table.Column<long>(type: "bigint", nullable: false),
                     Estado = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -181,6 +195,9 @@ namespace backend.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Comentarios");
+
+            migrationBuilder.DropTable(
+                name: "reiniciarContrasenas");
 
             migrationBuilder.DropTable(
                 name: "Etiquetas");

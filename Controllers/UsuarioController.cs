@@ -26,12 +26,20 @@ public class UsuarioController : ControllerBase
             message = "No se logro encontrar al usuario"
         });
 
+        if (!string.IsNullOrEmpty(userDto.Password))
+        {
+
+            string contrasenaHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            userDto.Password = contrasenaHash;
+        }
+        else
+        {
+            userDto.Password = usuario.Password;
+        }
+
         await _userServicio.Editar(userDto);
 
-        return Ok(new
-        {
-            message = "los cambios se realizaron correctamente"
-        });
+        return Ok("los cambios se realizaron correctamente");
     }
 
     [HttpGet]
@@ -54,11 +62,11 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{pid}")]
-    public async Task<ActionResult> ObtenerNoMiembros(long pid)
+    [Route("{pid}/nuevos_m")]
+    public async Task<ActionResult> ObtenerNoMiembros(long pid, string cadenaBuscar = "")
     {
         var miembros = await _miembroServicio.ObtenerMiembros(pid);
-        var usuarios = await _userServicio.ObtenerUsuarios("");
+        var usuarios = await _userServicio.ObtenerUsuarios(cadenaBuscar);
 
         var usuariosList = new List<UserDto>();
         foreach (var usuario in usuarios)
@@ -69,5 +77,21 @@ public class UsuarioController : ControllerBase
             }
         }
         return Ok(usuariosList);
+    }
+
+    [HttpPut]
+    [Route("{uid}/permisos")]
+    public async Task<ActionResult> PermisosUsuario(long uid, [FromBody] UsuarioRolDto rolDto)
+    {
+        var usuario = await _userServicio.ObtenerPorId(uid);
+        if (usuario == null) return BadRequest(new
+        {
+            message = "No se logro encontrar al usuario"
+        });
+
+        usuario.Rol = rolDto.rol;
+        await _userServicio.Editar(usuario);
+
+        return Ok();
     }
 }

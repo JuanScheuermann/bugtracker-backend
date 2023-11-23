@@ -12,7 +12,7 @@ public interface IProyectoServicio
 
     Task<bool> TieneAccesoProyecto(long pId, long userId);
 
-    Task<List<ProyectoInfoDto>> ObtenerMisProyectos(long id);
+    Task<List<ProyectoInfoDto>> ObtenerMisProyectos(long id, string cadenabuscar = "");
 
     Task<ProyectoDto?> Obtener(long id);
 

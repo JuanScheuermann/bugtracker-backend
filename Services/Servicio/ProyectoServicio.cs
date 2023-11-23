@@ -93,11 +93,15 @@ public class ProyectoServicio : IProyectoServicio
         };
     }
 
-    public async Task<List<ProyectoInfoDto>> ObtenerMisProyectos(long id)
+    public async Task<List<ProyectoInfoDto>> ObtenerMisProyectos(long id, string cadenaBuscar)
     {
         return await _context.Proyectos
         .Include(x => x.Miembros)
-        .Where(p => p.AutorId == id && p.Estado != Estado.Eliminado)
+        .Where(p => p.AutorId == id
+        &&
+        p.Titulo.Contains(cadenaBuscar)
+        &&
+        p.Estado != Estado.Eliminado)
         .Select(x => new ProyectoInfoDto
         {
             Id = x.Id,

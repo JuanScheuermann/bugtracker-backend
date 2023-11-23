@@ -6,7 +6,7 @@ public class ComentarioDto
 
     public string Cuerpo { get; set; }
 
-    public DateTime Fecha { get; set; }
+    public string? Fecha { get; set; }
 
     public long MiembroId { get; set; }
 

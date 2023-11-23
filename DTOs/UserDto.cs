@@ -16,7 +16,5 @@ public class UserDto
 
     public string Rol { get; set; }
 
-    public string? FotoUrl { get; set; }
-
     public string? Estado { get; set; }
 }

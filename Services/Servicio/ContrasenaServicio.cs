@@ -37,8 +37,7 @@ public class ContrasenaServicio : IContrasenaServicio
             Nombre = usuario.Nombre,
             Apellido = usuario.Apellido,
             Estado = usuario.Estado,
-            Rol = usuario.Rol,
-            FotoUrl = "",
+            Rol = usuario.Rol
         };
     }
 }

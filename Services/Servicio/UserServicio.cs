@@ -6,6 +6,7 @@ using BCrypt.Net;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Org.BouncyCastle.Crypto.Generators;
 
 namespace backend.Services.Servicio;
 
@@ -22,7 +23,6 @@ public class UserServicio : IUserServicio
     {
         string contrasenaHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
 
-        if (userDto.FotoUrl == null) { userDto.FotoUrl = "www.foto.com"; }
 
         User usuario = new User
         {
@@ -31,7 +31,6 @@ public class UserServicio : IUserServicio
             Nombre = userDto.Nombre,
             Apellido = userDto.Apellido,
             Rol = userDto.Rol,
-            FotoUrl = userDto.FotoUrl,
             Estado = Models.Estado.Activo
         };
 
@@ -50,16 +49,14 @@ public class UserServicio : IUserServicio
 
     public async Task Editar(UserDto userDto)
     {
-        string contrasenaHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
         var user = new Models.User
         {
             Id = userDto.Id,
             Email = userDto.Email,
-            PasswordHash = contrasenaHash,
+            PasswordHash = userDto.Password,
             Nombre = userDto.Nombre,
             Apellido = userDto.Apellido,
             Rol = userDto.Rol,
-            FotoUrl = userDto.FotoUrl,
             Estado = userDto.Estado
         };
 
@@ -82,7 +79,6 @@ public class UserServicio : IUserServicio
             Apellido = usuario.Apellido,
             Password = usuario.PasswordHash,
             Rol = usuario.Rol,
-            FotoUrl = usuario.FotoUrl,
             Estado = usuario.Estado
         };
     }
@@ -99,8 +95,8 @@ public class UserServicio : IUserServicio
             Nombre = user.Nombre,
             Apellido = user.Apellido,
             Rol = user.Rol,
-            FotoUrl = user.FotoUrl,
-            Estado = user.Estado
+            Estado = user.Estado,
+            Password = user.PasswordHash
         };
     }
 

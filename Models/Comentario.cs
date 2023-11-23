@@ -10,8 +10,7 @@ public class Comentario : Base
     public string Cuerpo { get; set; }
 
     [Required]
-    [DataType(DataType.Date)]
-    public DateTime Fecha { get; set; }
+    public string? Fecha { get; set; }
 
     [Required]
     [ForeignKey("Miembro")]

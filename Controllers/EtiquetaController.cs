@@ -64,7 +64,7 @@ public class EtiquetaController : ControllerBase
 
         //verificar si la etiqueta ya existe
         var etiquetaExiste = await _etiquetaServicio.etiquetaExiste(etiquetaDto.Titulo);
-        if (etiquetaExiste) return BadRequest(new { message = "Ya existe esta etiqueta" });
+        if (etiquetaExiste) return BadRequest("Ya existe esta etiqueta");
 
 
         var miembro = proyecto.Miembros.FirstOrDefault(x => x.UsuarioId == userId);

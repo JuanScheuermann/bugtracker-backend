@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
 using backend.DTOs;
 using backend.helpers;
-using backend.Migrations;
 using backend.Services.IServicio;
 using backend.Services.Servicio;
 using BCrypt.Net;
@@ -70,9 +69,9 @@ public class AuthController : ControllerBase
     {
         var usuario = await _contrasenaServicio.ObtenerporToken(token);
 
-        Console.WriteLine(dto.Password);
+        string contrasenaHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-        usuario.Password = dto.Password;
+        usuario.Password = contrasenaHash;
 
         await _userServicio.Editar(usuario);
 
@@ -106,7 +105,8 @@ public class AuthController : ControllerBase
         {
             Token = token,
             Nombre = usuario.ApiNom,
-            Uid = usuario.Id
+            Uid = usuario.Id,
+            Rol = usuario.Rol
         });
     }
 

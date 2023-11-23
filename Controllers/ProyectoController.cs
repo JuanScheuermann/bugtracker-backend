@@ -23,9 +23,9 @@ public class ProyectoController : ControllerBase
     [HttpGet]
     [Route("{uid}/all")]
     [AllowAnonymous]
-    public async Task<ActionResult> Obtenerproyectos(long uid)
+    public async Task<ActionResult> Obtenerproyectos(long uid, string cadenaBuscar = "")
     {
-        var proyectos = await _proyectoServicio.ObtenerMisProyectos(uid);
+        var proyectos = await _proyectoServicio.ObtenerMisProyectos(uid, cadenaBuscar);
         return Ok(proyectos);
     }
 

@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.DTOs;
+using backend.Models;
 using backend.Services.IServicio;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ public class ComentarioServicio : IComentarioServicio
         var comentario = new Models.Comentario
         {
             Cuerpo = comentarioDto.Cuerpo,
-            Fecha = DateTime.Now,
+            Fecha = DateTime.UtcNow.Date.ToString("d"),
             MiembroId = comentarioDto.MiembroId,
             EtiquetaId = comentarioDto.EtiquetaId,
             Estado = Models.Estado.Activo
@@ -75,7 +76,7 @@ public class ComentarioServicio : IComentarioServicio
     {
         return _context.Comentarios
         .Include(x => x.Miembro.Usuarior)
-        .Where(x => x.EtiquetaId == eid)
+        .Where(x => x.EtiquetaId == eid && x.Estado != Estado.Eliminado)
         .Select(x => new ComentarioDto
         {
             Id = x.Id,

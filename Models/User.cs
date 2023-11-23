@@ -24,13 +24,8 @@ public class User : Base
     public string PasswordHash { get; set; } = string.Empty;
 
     [Required]
-    public string FotoUrl { get; set; } = string.Empty;
-
-    [Required]
     [MaxLength(10)]
     public string Rol { get; set; }
-
-
 
     //props navegacion
     public virtual ICollection<Proyecto> Proyectos { get; set; }
