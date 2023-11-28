@@ -1,4 +1,5 @@
 using backend.DTOs;
+using backend.Models;
 using backend.Services.IServicio;
 using Microsoft.AspNetCore.Mvc;
 
@@ -71,7 +72,7 @@ public class UsuarioController : ControllerBase
         var usuariosList = new List<UserDto>();
         foreach (var usuario in usuarios)
         {
-            if (miembros.Any(x => x.UsuarioId == usuario.Id) == false)
+            if (miembros.Any(x => x.UsuarioId == usuario.Id || usuario.Estado == Estado.Bloqueado) == false)
             {
                 usuariosList.Add(usuario);
             }
@@ -90,6 +91,22 @@ public class UsuarioController : ControllerBase
         });
 
         usuario.Rol = rolDto.rol;
+        await _userServicio.Editar(usuario);
+
+        return Ok();
+    }
+
+    [HttpPut]
+    [Route("{uid}/bloquear")]
+    public async Task<ActionResult> BloquearUsuario(long uid)
+    {
+        var usuario = await _userServicio.ObtenerPorId(uid);
+        if (usuario == null) return BadRequest();
+
+        usuario.Estado = usuario.Estado == Estado.Activo
+        ? Estado.Bloqueado
+        : Estado.Activo;
+
         await _userServicio.Editar(usuario);
 
         return Ok();

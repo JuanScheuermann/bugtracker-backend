@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using backend.DTOs;
 using backend.helpers;
+using backend.Models;
 using backend.Services.IServicio;
 using backend.Services.Servicio;
 using BCrypt.Net;
@@ -89,6 +90,8 @@ public class AuthController : ControllerBase
         {
             Message = "Usuario o contraseña incorrecta."
         });
+
+        if (usuario.Estado == Estado.Bloqueado) return BadRequest(new { message = "Este Usuario se encuentra bloqueado" });
 
         //verificar contraseña
         if (!BCrypt.Net.BCrypt.Verify(request.Password, usuario.Password))
