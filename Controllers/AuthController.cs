@@ -57,6 +57,7 @@ public class AuthController : ControllerBase
         var usuario = await _userServicio.ObtenerPorMail(Dto.Email);
 
         if (usuario == null) return NotFound();
+        if (usuario.Estado == Estado.Bloqueado) return BadRequest(new { message = "Este Usuario se encuentra bloqueado" });
 
         var token = await _contrasenaServicio.Obtener(usuario.Email);
 

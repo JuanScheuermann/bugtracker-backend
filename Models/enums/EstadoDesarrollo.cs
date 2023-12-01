@@ -4,5 +4,6 @@ public enum EstadoDesarrollo
 {
     Desarrollo = 0,
     Finalizado = 1,
-    Abandonado = 2
+    Abandonado = 2,
+    Ninguno = 3
 }

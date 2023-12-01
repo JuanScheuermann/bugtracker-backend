@@ -1,5 +1,7 @@
 using System.Security.Claims;
 using backend.DTOs;
+using backend.Models;
+using backend.Models.enums;
 using backend.Services.IServicio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +25,17 @@ public class ProyectoController : ControllerBase
     [HttpGet]
     [Route("{uid}/all")]
     [AllowAnonymous]
-    public async Task<ActionResult> Obtenerproyectos(long uid, string cadenaBuscar = "")
+    public async Task<ActionResult> Obtenerproyectos(long uid, string cadenaBuscar = "", int estadoD = 4)
     {
-        var proyectos = await _proyectoServicio.ObtenerMisProyectos(uid, cadenaBuscar);
+        var estad = estadoD switch
+        {
+            0 => EstadoDesarrollo.Desarrollo,
+            1 => EstadoDesarrollo.Finalizado,
+            2 => EstadoDesarrollo.Abandonado,
+            _ => EstadoDesarrollo.Ninguno
+        };
+
+        var proyectos = await _proyectoServicio.ObtenerMisProyectos(uid, cadenaBuscar, estad);
         return Ok(proyectos);
     }
 
@@ -93,15 +103,28 @@ public class ProyectoController : ControllerBase
 
         if (proyecto == null) return NotFound(new { message = "Proyecto no encontrado" });
 
+        if (proyecto.Miembros!.Any(x => x.UsuarioId == ObtenerUserId()
+        && x.Estado != Estado.Eliminado) == false)
+        {
+
+            return Unauthorized(new { message = "Usted no esta autorizado para ver este proyecto" });
+        }
+
         return Ok(proyecto);
     }
 
     [HttpGet]
     [Route("{uid}/participando")]
-    public async Task<ActionResult> ObtenerProyectosParticipo(long uid)
+    public async Task<ActionResult> ObtenerProyectosParticipo(long uid, string cadenaBuscar = "", int estadoD = 4)
     {
-
-        var proyectos = await _proyectoServicio.ObtenerProyectosContribucion(uid);
+        var estad = estadoD switch
+        {
+            0 => EstadoDesarrollo.Desarrollo,
+            1 => EstadoDesarrollo.Finalizado,
+            2 => EstadoDesarrollo.Abandonado,
+            _ => EstadoDesarrollo.Ninguno
+        };
+        var proyectos = await _proyectoServicio.ObtenerProyectosContribucion(uid, cadenaBuscar, estad);
         return Ok(proyectos);
     }
 

@@ -8,11 +8,11 @@ public class Etiqueta : Base
 {
     [Required]
     [MaxLength(70)]
-    public string? Titulo { get; set; }
+    public string Titulo { get; set; }
 
     [Required]
     [MaxLength(250)]
-    public string? Detalles { get; set; }
+    public string Detalles { get; set; }
 
     [Required]
     public EstadoApertura EstadoApertura { get; set; }

@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Security.Claims;
 using backend.DTOs;
+using backend.Models.enums;
 using backend.Services.IServicio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,10 +27,18 @@ public class EtiquetaController : ControllerBase
 
     [HttpGet]
     [Route("{id}/all")]
-    public async Task<ActionResult> ObtenerEtiquetas(long id, string cadenaBuscar = "")
+    public async Task<ActionResult> ObtenerEtiquetas(long id, string cadenaBuscar = "", int prioridad = 4)
     {
-        var etiquetas = await _etiquetaServicio.ObtenerEtiquetas(id, cadenaBuscar);
 
+        var prior = prioridad switch
+        {
+            1 => Models.enums.Prioridad.Baja,
+            2 => Models.enums.Prioridad.Media,
+            3 => Models.enums.Prioridad.Alta,
+            _ => Models.enums.Prioridad.Ninguna
+        };
+
+        var etiquetas = await _etiquetaServicio.ObtenerEtiquetas(id, cadenaBuscar, prior);
         return Ok(etiquetas);
     }
 

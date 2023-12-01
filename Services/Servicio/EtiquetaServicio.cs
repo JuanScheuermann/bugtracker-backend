@@ -94,29 +94,44 @@ public class EtiquetaServicio : IEtiquetaServicio
         };
     }
 
-    public async Task<List<EtiquetaDto>> ObtenerEtiquetas(long proyectoId, string cadenaBuscar)
+    public async Task<List<EtiquetaDto>> ObtenerEtiquetas(long proyectoId, string cadenaBuscar = "", Prioridad prioridad = Prioridad.Ninguna)
     {
-        /*  var miembros = await _context.Miembros
-         .Where(x => x.ProyectoId == proyectoId)
-         .FirstOrDefaultAsync(x => x.UserId == userId); */
 
-        /* if (miembros == null) throw new Exception("No autorizado"); */
+        if (prioridad == Prioridad.Ninguna)
+        {
+
+            return await _context.Etiquetas
+            .Where(x =>
+            x.Titulo.Contains(cadenaBuscar)
+            && x.ProyectoId == proyectoId
+            && x.Estado == Models.Estado.Activo)
+            .Select(x => new EtiquetaDto
+            {
+                Id = x.Id,
+                Titulo = x.Titulo,
+                Detalles = x.Detalles,
+                EstadoApertura = x.EstadoApertura,
+                Prioridad = x.Prioridad,
+                ProyectoId = x.ProyectoId,
+                MiembroId = x.MiembroId
+            }).ToListAsync();
+        }
 
         return await _context.Etiquetas
-        .Where(x => x.ProyectoId == proyectoId
-        &&
-        x.Titulo.Contains(cadenaBuscar)
-        && x.Estado == Models.Estado.Activo)
-        .Select(x => new EtiquetaDto
-        {
-            Id = x.Id,
-            Titulo = x.Titulo,
-            Detalles = x.Detalles,
-            EstadoApertura = x.EstadoApertura,
-            Prioridad = x.Prioridad,
-            ProyectoId = x.ProyectoId,
-            MiembroId = x.MiembroId
-        }).ToListAsync();
+           .Where(x => x.ProyectoId == proyectoId
+           && x.Titulo.Contains(cadenaBuscar)
+           && x.Prioridad == prioridad
+           && x.Estado == Models.Estado.Activo)
+           .Select(x => new EtiquetaDto
+           {
+               Id = x.Id,
+               Titulo = x.Titulo,
+               Detalles = x.Detalles,
+               EstadoApertura = x.EstadoApertura,
+               Prioridad = x.Prioridad,
+               ProyectoId = x.ProyectoId,
+               MiembroId = x.MiembroId
+           }).ToListAsync();
     }
 
     public async Task<bool> etiquetaExiste(string titulo)

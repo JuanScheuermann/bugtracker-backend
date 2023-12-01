@@ -1,7 +1,7 @@
 using backend.DTOs;
-using backend.Models;
 using backend.Services.IServicio;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace backend.Controllers;
 
@@ -74,4 +74,5 @@ public class ComentarioController : ControllerBase
         return Ok(new { message = "Comentario eliminado" });
 
     }
+
 }

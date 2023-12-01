@@ -2,6 +2,7 @@ using System.Transactions;
 using backend.Data;
 using backend.DTOs;
 using backend.Models;
+using backend.Models.enums;
 using backend.Services.IServicio;
 using Microsoft.EntityFrameworkCore;
 
@@ -93,32 +94,56 @@ public class ProyectoServicio : IProyectoServicio
         };
     }
 
-    public async Task<List<ProyectoInfoDto>> ObtenerMisProyectos(long id, string cadenaBuscar)
+    public async Task<List<ProyectoInfoDto>> ObtenerMisProyectos(long id, string cadenaBuscar, EstadoDesarrollo estadoD)
     {
-        return await _context.Proyectos
-        .Include(x => x.Miembros)
-        .Where(p => p.AutorId == id
-        &&
-        p.Titulo.Contains(cadenaBuscar)
-        &&
-        p.Estado != Estado.Eliminado)
-        .Select(x => new ProyectoInfoDto
+        if (estadoD == EstadoDesarrollo.Ninguno)
         {
-            Id = x.Id,
-            Titulo = x.Titulo,
-            Descripcion = x.Descripcion,
-            AutorId = x.AutorId,
-            AutorNombre = $"{x.User.Nombre} {x.User.Apellido}",
-            EstadoDesarrollo = x.EstadoDesarrollo,
-            Estado = x.Estado
-            /* Miembros = x.Miembros.Select(m => new MiembroDto
-            {
-                Id = m.Id,
-                ProyectoId = m.ProyectoId,
-                UsuarioId = m.UserId
-            }).ToList() */
 
-        }).ToListAsync();
+            return await _context.Proyectos
+            .Include(x => x.Miembros)
+            .Where(p => p.AutorId == id
+            &&
+            p.Titulo.Contains(cadenaBuscar)
+            &&
+            p.Estado != Estado.Eliminado)
+            .Select(x => new ProyectoInfoDto
+            {
+                Id = x.Id,
+                Titulo = x.Titulo,
+                Descripcion = x.Descripcion,
+                AutorId = x.AutorId,
+                AutorNombre = $"{x.User.Nombre} {x.User.Apellido}",
+                EstadoDesarrollo = x.EstadoDesarrollo,
+                Estado = x.Estado
+                /* Miembros = x.Miembros.Select(m => new MiembroDto
+                {
+                    Id = m.Id,
+                    ProyectoId = m.ProyectoId,
+                    UsuarioId = m.UserId
+                }).ToList() */
+
+            }).ToListAsync();
+        }
+
+        return await _context.Proyectos
+            .Include(x => x.Miembros)
+            .Where(p => p.AutorId == id
+            &&
+            p.Titulo.Contains(cadenaBuscar)
+            &&
+            p.EstadoDesarrollo == estadoD
+            &&
+            p.Estado != Estado.Eliminado)
+            .Select(x => new ProyectoInfoDto
+            {
+                Id = x.Id,
+                Titulo = x.Titulo,
+                Descripcion = x.Descripcion,
+                AutorId = x.AutorId,
+                AutorNombre = $"{x.User.Nombre} {x.User.Apellido}",
+                EstadoDesarrollo = x.EstadoDesarrollo,
+                Estado = x.Estado
+            }).ToListAsync();
     }
 
     public async Task<ProyectoDto?> Obtener(long id)
@@ -169,25 +194,48 @@ public class ProyectoServicio : IProyectoServicio
         return false;
     }
 
-    public async Task<List<ProyectoInfoDto>> ObtenerProyectosContribucion(long uid)
+    public async Task<List<ProyectoInfoDto>> ObtenerProyectosContribucion(long uid, string cadenaBuscar = "", EstadoDesarrollo estadoD = EstadoDesarrollo.Ninguno)
     {
         var miembros = await _context.Miembros
         .Include(x => x.Proyecto)
         .Where(x => x.UserId == uid && x.Proyecto.AutorId != uid)
         .Select(x => x.ProyectoId).ToArrayAsync();
 
-        return await _context.Proyectos
-        .Include(x => x.User)
-        .Where(x => miembros.Contains(x.Id) && x.Estado == Estado.Activo)
-        .Select(x => new ProyectoInfoDto
+        if (estadoD == EstadoDesarrollo.Ninguno)
         {
-            Id = x.Id,
-            Titulo = x.Titulo,
-            Descripcion = x.Descripcion,
-            EstadoDesarrollo = x.EstadoDesarrollo,
-            AutorId = x.AutorId,
-            AutorNombre = x.User.Email,
-            Estado = x.Estado
-        }).ToListAsync();
+
+            return await _context.Proyectos
+            .Include(x => x.User)
+            .Where(x => miembros.Contains(x.Id)
+            && x.Titulo.Contains(cadenaBuscar)
+            && x.Estado == Estado.Activo)
+            .Select(x => new ProyectoInfoDto
+            {
+                Id = x.Id,
+                Titulo = x.Titulo,
+                Descripcion = x.Descripcion,
+                EstadoDesarrollo = x.EstadoDesarrollo,
+                AutorId = x.AutorId,
+                AutorNombre = x.User.Email,
+                Estado = x.Estado
+            }).ToListAsync();
+        }
+
+        return await _context.Proyectos
+            .Include(x => x.User)
+            .Where(x => miembros.Contains(x.Id)
+            && x.Titulo.Contains(cadenaBuscar)
+            && x.EstadoDesarrollo == estadoD
+            && x.Estado == Estado.Activo)
+            .Select(x => new ProyectoInfoDto
+            {
+                Id = x.Id,
+                Titulo = x.Titulo,
+                Descripcion = x.Descripcion,
+                EstadoDesarrollo = x.EstadoDesarrollo,
+                AutorId = x.AutorId,
+                AutorNombre = x.User.Email,
+                Estado = x.Estado
+            }).ToListAsync();
     }
 }

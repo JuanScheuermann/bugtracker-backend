@@ -27,6 +27,14 @@ public class UsuarioController : ControllerBase
             message = "No se logro encontrar al usuario"
         });
 
+        if (usuario.Email != userDto.Email && _userServicio.ObtenerPorMail(userDto.Email) != null)
+        {
+            return BadRequest(new
+            {
+                message = "Este email se encuentra usado por otro usuario"
+            });
+        }
+
         if (!string.IsNullOrEmpty(userDto.Password))
         {
 

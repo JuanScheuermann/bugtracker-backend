@@ -67,7 +67,7 @@ public class UserServicio : IUserServicio
     public async Task<UserDto> ObtenerPorMail(string email = "")
     {
         var usuario = await _context.users.
-       FirstOrDefaultAsync(u => u.Email == email);
+       FirstOrDefaultAsync(u => u.Email == email.Trim());
 
         if (usuario == null) return null;
 
