@@ -1,6 +1,7 @@
 using backend.DTOs;
 using backend.Models;
 using backend.Services.IServicio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -88,8 +89,19 @@ public class UsuarioController : ControllerBase
         return Ok(usuariosList);
     }
 
+    [HttpGet]
+    [Route("admin/usuarios")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> ObtnerUsuariosAdmin(string cadenaBuscar = "")
+    {
+
+        var usuarios = await _userServicio.ObtenerUsuarios(cadenaBuscar);
+        return Ok(usuarios);
+    }
+
     [HttpPut]
     [Route("{uid}/permisos")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> PermisosUsuario(long uid, [FromBody] UsuarioRolDto rolDto)
     {
         var usuario = await _userServicio.ObtenerPorId(uid);
@@ -106,6 +118,8 @@ public class UsuarioController : ControllerBase
 
     [HttpPut]
     [Route("{uid}/bloquear")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult> BloquearUsuario(long uid)
     {
         var usuario = await _userServicio.ObtenerPorId(uid);
